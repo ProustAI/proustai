@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: 'postgres:13'
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: proustai
+      POSTGRES_USER: proustai
+      POSTGRES_PASSWORD: proustai
+    volumes:
+      - 'postgres:/var/lib/postgresql/data'
+
+volumes:
+  postgres:
