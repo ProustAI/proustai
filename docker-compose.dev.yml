@@ -9,6 +9,15 @@ services:
       POSTGRES_PASSWORD: proustai
     volumes:
       - 'postgres:/var/lib/postgresql/data'
-
+  mailpit:
+    image: 'axllent/mailpit:latest'
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8025/livez']
+      interval: 30s
+      timeout: 10s
+      retries: 5
 volumes:
   postgres:

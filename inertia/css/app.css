@@ -1,36 +1,54 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
+/* Import Inter font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
-* {
-  margin: 0;
-  padding: 0;
-}
+/* Import Lora font */
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;700;900&display=swap');
 
-html,
-body,
-#app {
-  background-color: #F7F8FA;
-  font-family: 'Poppins', sans-serif;
-  color: #46444c;
-  height: 100%;
-  width: 100%;
-}
+/* Import Tiptap styles */
+@import url('./tiptap.css');
 
-.title {
-  font-size: 42px;
-  font-weight: 500;
-  color: #5a45ff;
-}
+/* TailwindCSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-}
+/* Custom styles (shoutout to @thekitze) */
+@layer components {
+  /* Alignments */
+  .vertical {
+    @apply flex flex-col;
+  }
 
-a {
-  text-decoration: underline;
-  color: #5a45ff;
+  .horizontal {
+    @apply flex flex-row;
+  }
+
+  .center {
+    @apply justify-center items-center;
+  }
+
+  .horizontal.center-v {
+    @apply items-center;
+  }
+
+  .horizontal.center-h {
+    @apply justify-center;
+  }
+
+  .vertical.center-v {
+    @apply justify-center;
+  }
+
+  .vertical.center-h {
+    @apply items-center;
+  }
+
+  /* Buttons */
+  .primary-btn {
+    @apply horizontal center space-x-2 text-sm leading-6 font-medium bg-black text-white px-4 py-2 rounded-lg shadow-lg hover:opacity-75 transition;
+  }
+
+  .danger-btn {
+    @apply horizontal center space-x-2 text-sm leading-6 font-medium bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg hover:opacity-75 transition;
+  }
 }

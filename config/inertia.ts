@@ -1,3 +1,4 @@
+import FeatureFlagsService from '#services/feature_flags_service'
 import { defineConfig } from '@adonisjs/inertia'
 
 export default defineConfig({
@@ -11,13 +12,19 @@ export default defineConfig({
    */
   sharedData: {
     errors: (ctx) => ctx.session?.flashMessages.get('errors'),
+    user: (ctx) => ctx.auth.user,
+    qs: (ctx) => ctx.request.qs(),
+    features: () => {
+      return FeatureFlagsService.getFeatureFlagsValues()
+    },
+    params: (ctx) => ctx.params,
   },
 
   /**
    * Options for the server-side rendering
    */
   ssr: {
-    enabled: true,
-    entrypoint: 'inertia/app/ssr.tsx'
-  }
+    enabled: false,
+    entrypoint: 'inertia/app/ssr.tsx',
+  },
 })

@@ -1,25 +1,22 @@
-import '../css/app.css';
-import { hydrateRoot } from 'react-dom/client'
-import { createInertiaApp } from '@inertiajs/react';
-import { resolvePageComponent } from '@adonisjs/inertia/helpers'
+import '../css/app.css'
+import { createRoot } from 'react-dom/client'
+import { createInertiaApp } from '@inertiajs/react'
 
-const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS'
+const appName = import.meta.env.VITE_APP_NAME || 'ProustAI'
 
 createInertiaApp({
   progress: { color: '#5468FF' },
 
-  title: (title) => `${title} - ${appName}`,
+  title: (title) => (title ? `${title} - ${appName}` : appName),
 
   resolve: (name) => {
-    return resolvePageComponent(
-      `../pages/${name}.tsx`,
-      import.meta.glob('../pages/**/*.tsx'),
-    )
+    const [firstPart, ...rest] = name.split('/')
+    const pages = import.meta.glob('../**/pages/*.tsx', { eager: true })
+    return pages[`../concerns/${firstPart}/pages/${rest.join('/')}.tsx`]
   },
 
   setup({ el, App, props }) {
-    
-    hydrateRoot(el, <App {...props} />)
-    
+    const root = createRoot(el)
+    root.render(<App {...props} />)
   },
-});
+})
