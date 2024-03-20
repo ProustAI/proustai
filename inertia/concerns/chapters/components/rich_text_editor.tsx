@@ -7,6 +7,8 @@ import useParams from '~/hooks/use_params'
 import usePageProps from '~/hooks/use_page_props'
 import RichTextMenubar from '~/concerns/chapters/components/rich_text_menubar'
 import type Chapter from '#types/chapter'
+import { useDebounce } from 'use-debounce'
+import * as React from 'react'
 
 export default function RichTextEditor() {
   const params = useParams()
@@ -41,11 +43,9 @@ export default function RichTextEditor() {
       return { Tab: tabCommand }
     },
   })
+
   const editor = useEditor({
     content: currentChapter.content,
-    onUpdate: async ({}) => {
-      // TODO: Save the content to the server
-    },
     editorProps: {
       attributes: {
         class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl focus:outline-none',
@@ -53,6 +53,20 @@ export default function RichTextEditor() {
     },
     extensions: [StarterKit.configure(), Highlight, TaskList, TaskItem, completionExtension],
   })
+
+  const [debouncedContent] = useDebounce(editor?.getHTML(), 5000)
+
+  React.useEffect(() => {
+    if (editor && debouncedContent !== currentChapter.content) {
+      fetch(`/novels/${params.novelId}/chapters/${params.chapterId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content: debouncedContent }),
+      })
+    }
+  }, [debouncedContent])
 
   return (
     <div className="editor">

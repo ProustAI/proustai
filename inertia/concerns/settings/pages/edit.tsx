@@ -2,7 +2,6 @@ import MainLayout from '~/components/main_layout'
 import * as React from 'react'
 import EditSettingsCard from '../components/edit_settings_card'
 import DeleteAccountCard from '../components/delete_account_card'
-import Spinner from '~/components/spinner'
 
 interface EditProps {}
 

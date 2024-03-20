@@ -96,7 +96,8 @@
     "remixicon": "^4.2.0",
     "replicate": "^0.29.0",
     "stripe": "^14.21.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "use-debounce": "^10.0.0"
   },
   "eslintConfig": {
     "extends": "@adonisjs/eslint-config/app"
