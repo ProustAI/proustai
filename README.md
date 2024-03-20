@@ -31,6 +31,7 @@ cd proustai
 
 # Set up environment variables
 # (fill in the .env file with your OpenAI API key if you want to use GPT)
+# (and your REPLICATE_API_TOKEN if you want to use Stable Diffusion)
 cp .env.example .env
 
 # Install dependencies

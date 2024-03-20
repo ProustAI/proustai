@@ -18,7 +18,7 @@ const LocationImagesCard: React.FunctionComponent<LocationImagesCardProps> = () 
 
   React.useEffect(() => {
     const es = new EventSource(
-      `/novels/${params.novelId}/characters/${params.locationId}/image_generations_updates`
+      `/novels/${params.novelId}/locations/${params.locationId}/image_generations_updates`
     )
 
     es.onmessage = (event) => {

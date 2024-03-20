@@ -20,6 +20,6 @@ export default class SignUpController {
     await user.save()
     await auth.use('web').login(user)
 
-    return response.redirect().toPath('/novels')
+    return response.redirect().toRoute('novels.index')
   }
 }

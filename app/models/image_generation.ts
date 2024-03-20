@@ -38,13 +38,11 @@ export default class ImageGeneration extends BaseModel {
    */
   @afterCreate()
   static emitStartedEvent(imageGeneration: ImageGeneration) {
-    console.log('image_generation:started', imageGeneration)
     emitter.emit('image_generation:started', imageGeneration)
   }
 
   @afterSave()
   static emitUpdatedEvent(imageGeneration: ImageGeneration) {
-    console.log('image_generation:updated', imageGeneration)
     if (imageGeneration.characterId !== null) {
       emitter.emit(`character:${imageGeneration.characterId}:image_generation`, imageGeneration)
     }
