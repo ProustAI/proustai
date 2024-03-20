@@ -2,6 +2,16 @@
 
 > ProustAI is an _AI-powered_ **writing assistant** that helps you write your next novel. Writing a novel used to be painful, but with ProustAI, it's never been easier.
 
+## Technologies
+
+- [AdonisJS](https://adonisjs.com/) - A fully-featured Node.js framework
+- [React](https://react.dev/) - The library for web and native user interfaces
+- [TailwindCSS](https://tailwindcss.com/) - A utility-first CSS framework
+- [ShadCN UI](https://ui.shadcn.com/) - A collection of TailwindCSS components
+- [Inertia.js](https://inertiajs.com/) - A glue that connects AdonisJS and React
+- [Docker](https://www.docker.com/) - A containerization platform
+- [PostgreSQL](https://www.postgresql.org/) - A relational database management system
+
 ## Development setup
 
 ### Requirements
