@@ -1,8 +1,9 @@
-import { belongsTo, column } from '@adonisjs/lucid/orm'
+import { afterCreate, afterSave, belongsTo, column } from '@adonisjs/lucid/orm'
 import BaseModel from './base_model.js'
 import { BelongsTo } from '@adonisjs/lucid/types/relations'
 import Character from './character.js'
 import Location from './location.js'
+import emitter from '@adonisjs/core/services/emitter'
 
 export default class ImageGeneration extends BaseModel {
   /**
@@ -31,4 +32,25 @@ export default class ImageGeneration extends BaseModel {
 
   @column()
   declare locationId: string | null
+
+  /**
+   * Hooks.
+   */
+  @afterCreate()
+  static emitStartedEvent(imageGeneration: ImageGeneration) {
+    console.log('image_generation:started', imageGeneration)
+    emitter.emit('image_generation:started', imageGeneration)
+  }
+
+  @afterSave()
+  static emitUpdatedEvent(imageGeneration: ImageGeneration) {
+    console.log('image_generation:updated', imageGeneration)
+    if (imageGeneration.characterId !== null) {
+      emitter.emit(`character:${imageGeneration.characterId}:image_generation`, imageGeneration)
+    }
+
+    if (imageGeneration.locationId !== null) {
+      emitter.emit(`location:${imageGeneration.locationId}:image_generation`, imageGeneration)
+    }
+  }
 }

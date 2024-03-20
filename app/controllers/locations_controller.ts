@@ -1,5 +1,6 @@
 import ImageGeneration from '#models/image_generation'
 import type { HttpContext } from '@adonisjs/core/http'
+import emitter from '@adonisjs/core/services/emitter'
 
 export default class LocationsController {
   async index({ auth, params, inertia, response }: HttpContext) {
@@ -9,9 +10,11 @@ export default class LocationsController {
       .where('id', params.novelId)
       .preload('locations', (query) => query.orderBy('name', 'asc'))
       .firstOrFail()
+
     if (novel.locations.length > 0) {
       return response.redirect(`/novels/${novel.id}/locations/${novel.locations[0].id}`)
     }
+
     return inertia.render('locations/edit', { novel })
   }
 
@@ -24,6 +27,7 @@ export default class LocationsController {
       .firstOrFail()
 
     const currentLocation = novel.locations.find((location) => location.id === params.locationId)
+
     if (currentLocation) {
       const imageGenerations = await ImageGeneration.query().where('locationId', currentLocation.id)
       return inertia.render('locations/edit', { novel, currentLocation, imageGenerations })
@@ -55,8 +59,11 @@ export default class LocationsController {
       .query()
       .where('id', params.locationId)
       .firstOrFail()
+
     location.merge(request.all())
+
     await location.save()
+
     return response.redirect().back()
   }
 
@@ -66,12 +73,15 @@ export default class LocationsController {
       .query()
       .where('id', params.novelId)
       .firstOrFail()
+
     const location = await novel
       .related('locations')
       .query()
       .where('id', params.locationId)
       .firstOrFail()
+
     await location.delete()
+
     return response.redirect().toRoute('novels.locations.index', { novelId: location.novelId })
   }
 
@@ -81,17 +91,18 @@ export default class LocationsController {
       .query()
       .where('id', params.novelId)
       .firstOrFail()
+
     const location = await novel
       .related('locations')
       .query()
       .where('id', params.locationId)
       .firstOrFail()
-    const ig = await ImageGeneration.create({
+
+    await ImageGeneration.create({
       status: 'pending',
       prompt: request.input('prompt'),
       locationId: location.id,
     })
-    // emitter.emit('generation', ig)
 
     return response.redirect().back()
   }
@@ -104,15 +115,16 @@ export default class LocationsController {
       .query()
       .where('id', params.novelId)
       .firstOrFail()
+
     const location = await novel
       .related('locations')
       .query()
       .where('id', params.locationId)
       .firstOrFail()
-    // emitter.on(`location:${location.id}:generated`, (data) => {
-    //   response.response.write(`data: ${JSON.stringify(data)}\n\n`)
-    //   response.response.flushHeaders()
-    // })
+
+    emitter.on(`location:${location.id}:image_generation`, (ig) => {
+      response.sendServerSentEvent(ig)
+    })
 
     response.response.on('close', () => {
       response.response.end()

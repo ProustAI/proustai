@@ -7,6 +7,9 @@ export default {
         sans: ['Inter', 'sans-serif'],
         serif: ['Lora', 'serif'],
       },
+      gridTemplateColumns: {
+        'auto-fill-64': 'repeat(auto-fill, minmax(16rem, 1fr))',
+      },
     },
   },
   plugins: [

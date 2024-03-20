@@ -1,4 +1,3 @@
-import Character from '#types/character'
 import ImageGeneration from '#types/image_generation'
 import { IconPhoto } from '@tabler/icons-react'
 import * as React from 'react'
@@ -10,20 +9,29 @@ import GenerateCharacterImageDialog from './generate_character_image_dialog'
 interface CharacterImagesCardProps {}
 
 const CharacterImagesCard: React.FunctionComponent<CharacterImagesCardProps> = () => {
-  const { imageGenerations: initialImageGenerations, currentCharacter } = usePageProps<{
+  const { imageGenerations: initialImageGenerations } = usePageProps<{
     imageGenerations: ImageGeneration[]
-    currentCharacter: Character
   }>()
   const [showGenerateDialog, setShowGenerateDialog] = React.useState(false)
   const [imageGenerations, setImageGenerations] = React.useState(initialImageGenerations)
   const params = useParams()
+
   React.useEffect(() => {
     const es = new EventSource(
-      `/novels/${params.novelId}/characters/${currentCharacter.id}/image-generations`
+      `/novels/${params.novelId}/characters/${params.characterId}/image_generations_updates`
     )
+
     es.onmessage = (event) => {
       setImageGenerations((prev) => {
         const data = JSON.parse(event.data)
+
+        /**
+         * Add if not exist, update if exist.
+         */
+        const index = prev.findIndex((imageGeneration) => imageGeneration.id === data.id)
+        if (index === -1) {
+          return [...prev, data]
+        }
         return prev.map((imageGeneration) => {
           if (imageGeneration.id === data.id) {
             return data
@@ -32,8 +40,9 @@ const CharacterImagesCard: React.FunctionComponent<CharacterImagesCardProps> = (
         })
       })
     }
+
     return () => es.close()
-  }, [currentCharacter.id])
+  }, [params])
 
   return (
     <>
@@ -53,11 +62,11 @@ const CharacterImagesCard: React.FunctionComponent<CharacterImagesCardProps> = (
         </CardHeader>
         <CardContent className="px-6 space-y-4">
           {imageGenerations.length !== 0 && (
-            <ul className="grid gap-4">
+            <ul className="grid grid-cols-auto-fill-64 gap-4">
               {imageGenerations.map((imageGeneration) => (
                 <div key={imageGeneration.id}>
                   {imageGeneration.status === 'completed' && (
-                    <div className="aspect-square bg-amber-50/80 border border-zinc-300/50 rounded-xl max-h-64 w-auto">
+                    <div className="aspect-square bg-amber-50/80 border border-zinc-300/50 rounded-xl h-64 w-auto">
                       <img
                         className="object-cover rounded-xl"
                         src={imageGeneration.imageLocation}
@@ -65,9 +74,16 @@ const CharacterImagesCard: React.FunctionComponent<CharacterImagesCardProps> = (
                     </div>
                   )}
                   {imageGeneration.status === 'pending' && (
-                    <div className="bg-amber-50/80 border border-zinc-300/50 aspect-square rounded-xl flex justify-center items-center max-h-64 w-auto">
+                    <div className="bg-amber-50/80 border border-zinc-300/50 aspect-square rounded-xl flex justify-center items-center h-64 w-64">
                       <div>
                         <span className="loading loading-spinner loading-lg text-gray-600"></span>
+                      </div>
+                    </div>
+                  )}
+                  {imageGeneration.status === 'failed' && (
+                    <div className="aspect-square bg-red-50/80 border border-zinc-300/50 rounded-xl h-64 w-auto">
+                      <div className="flex justify-center items-center h-full">
+                        <span className="text-red-600">Failed</span>
                       </div>
                     </div>
                   )}

@@ -1,5 +1,6 @@
 import ImageGeneration from '#models/image_generation'
 import type { HttpContext } from '@adonisjs/core/http'
+import emitter from '@adonisjs/core/services/emitter'
 
 export default class CharactersController {
   async index({ auth, params, inertia, response }: HttpContext) {
@@ -104,7 +105,7 @@ export default class CharactersController {
       .where('id', params.characterId)
       .firstOrFail()
 
-    const ig = await ImageGeneration.create({
+    await ImageGeneration.create({
       status: 'pending',
       prompt: request.input('prompt'),
       characterId: character.id,
@@ -127,6 +128,10 @@ export default class CharactersController {
       .query()
       .where('id', params.characterId)
       .firstOrFail()
+
+    emitter.on(`character:${character.id}:image_generation`, (ig) => {
+      response.sendServerSentEvent(ig)
+    })
 
     response.response.on('close', () => {
       response.response.end()

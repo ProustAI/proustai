@@ -16,3 +16,5 @@ FeatureFlagsService.defineFeatureFlag(
     !!env.get('GOOGLE_CLIENT_SECRET') &&
     !!env.get('GOOGLE_CALLBACK_URL')
 )
+
+FeatureFlagsService.defineFeatureFlag('image_generation', () => !!env.get('REPLICATE_API_TOKEN'))

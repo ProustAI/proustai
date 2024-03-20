@@ -94,6 +94,7 @@
     "react-dom": "^18.2.0",
     "reflect-metadata": "^0.2.1",
     "remixicon": "^4.2.0",
+    "replicate": "^0.29.0",
     "stripe": "^14.21.0",
     "tailwindcss-animate": "^1.0.7"
   },
