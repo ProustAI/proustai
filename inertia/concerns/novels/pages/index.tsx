@@ -27,7 +27,7 @@ const Index: React.FunctionComponent<IndexProps> = ({ novels }) => {
     >
       <CreateNovelDialog open={open} setOpen={setOpen} />
 
-      <div className="flex space-x-6 px-4 py-6 lg:px-10 items-center">
+      <div className="flex space-x-6 items-center">
         <h1 className="text-3xl font-bold">Novels</h1>
 
         <button className="primary-btn" onClick={() => setOpen(true)}>
@@ -36,7 +36,7 @@ const Index: React.FunctionComponent<IndexProps> = ({ novels }) => {
         </button>
       </div>
 
-      <ul className="grid grid-cols-1 gap-6 px-4 lg:px-10 sm:grid-cols-2 md:grid-cols-3">
+      <ul className="grid grid-cols-1 pt-4 gap-6 sm:grid-cols-2 md:grid-cols-3">
         {novels.map((novel) => (
           <Link
             key={novel.id}

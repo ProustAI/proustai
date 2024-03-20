@@ -22,6 +22,7 @@ const NovelsController = () => import('#controllers/novels_controller')
 const CharactersController = () => import('#controllers/characters_controller')
 const LocationsController = () => import('#controllers/locations_controller')
 const ChaptersController = () => import('#controllers/chapters_controller')
+const BillingController = () => import('#controllers/billing_controller')
 
 /**
  * Marketing routes.
@@ -120,4 +121,13 @@ router
     LocationsController,
     'imageGenerationUpdates',
   ])
+  .use(middleware.auth())
+
+/**
+ * Billing.
+ */
+router.get('/billing', [BillingController, 'show']).as('billing.show').use(middleware.auth())
+router
+  .get('/billing/manage', [BillingController, 'manage'])
+  .as('billing.manage')
   .use(middleware.auth())

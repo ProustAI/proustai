@@ -52,7 +52,9 @@ const MainLayout: React.FunctionComponent<MainLayoutProps> = ({ children, header
       </header>
 
       <div className="bg-amber-50/80">
-        <div className=" mx-auto max-w-5xl">{children}</div>
+        <div className=" mx-auto max-w-5xl">
+          <div className="px-4 py-6 lg:px-10">{children}</div>
+        </div>
       </div>
     </main>
   )

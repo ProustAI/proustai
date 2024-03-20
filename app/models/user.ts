@@ -6,6 +6,7 @@ import Novel from './novel.js'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import BaseModel from './base_model.js'
 import emitter from '@adonisjs/core/services/emitter'
+import BillingPeriod from './billing_period.js'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -33,6 +34,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
    */
   @hasMany(() => Novel)
   declare novels: HasMany<typeof Novel>
+
+  @hasMany(() => BillingPeriod)
+  declare billingPeriods: HasMany<typeof BillingPeriod>
 
   /**
    * Hooks.
