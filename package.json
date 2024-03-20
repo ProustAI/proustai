@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node bin/server.js",
     "build": "node ace build",
-    "dev": "docker compose -f docker-compose.dev.yml up -d && node ace serve --watch",
+    "dev": "docker compose -f docker-compose.dev.yml up -d && npm run migrate && node ace serve --watch",
     "migrate": "node ace migration:run",
     "fresh": "node ace migration:fresh",
     "test": "node ace test",

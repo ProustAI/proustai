@@ -1,3 +1,5 @@
+[![](/public/illustration.webp)]()
+
 # ProustAI
 
 > ProustAI is an _AI-powered_ **writing assistant** that helps you write your next novel. Writing a novel used to be painful, but with ProustAI, it's never been easier.
@@ -11,6 +13,21 @@
 - [Inertia.js](https://inertiajs.com/) - A glue that connects AdonisJS and React
 - [Docker](https://www.docker.com/) - A containerization platform
 - [PostgreSQL](https://www.postgresql.org/) - A relational database management system
+
+## Key Features
+
+- Rich Text Editor
+  - +LLMs-based "Complete", "Shorten", "Extend", "Rephrase", "Simplify" functionalities
+- Characters Database
+  - +Stable Diffusion-based visualizations
+- Locations Database
+  - +Stable Diffusion-based visualizations
+
+## Incoming Features
+
+- Story Board
+- Plot Generator
+- AI-based cover generator
 
 ## Development setup
 
