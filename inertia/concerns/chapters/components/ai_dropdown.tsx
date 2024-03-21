@@ -31,9 +31,10 @@ const AiDropdown: React.FunctionComponent<AiDropdownProps> = ({ editor }) => {
   const params = useParams()
 
   const onCompleteClick = async () => {
+    const from = editor.state.selection.from
     let to = editor.state.selection.to
 
-    const selectedText = editor.state.doc.textBetween(selectionFrom, to, ' ')
+    const selectedText = editor.state.doc.textBetween(from, to, ' ')
     const response = await fetch(
       `/novels/${params.novelId}/chapters/${params.chapterId}/complete`,
       {
@@ -54,7 +55,34 @@ const AiDropdown: React.FunctionComponent<AiDropdownProps> = ({ editor }) => {
     })
   }
 
-  const onShortenClick = () => {}
+  const onShortenClick = async () => {
+    const from = editor.state.selection.from
+    let to = editor.state.selection.to
+
+    const selectedText = editor.state.doc.textBetween(from, to, ' ')
+    const response = await fetch(
+      `/novels/${params.novelId}/chapters/${params.chapterId}/complete`,
+      {
+        method: 'POST',
+        headers: { 'Accept': 'text/event-stream', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: `Shorten this text: ${selectedText}` }),
+      }
+    )
+    const reader = response.body!.pipeThrough(new TextDecoderStream()).getReader()
+    editor.commands.deleteRange({ from, to })
+
+    reader.read().then(function processText({ value, done }): any {
+      if (done) return
+
+      /**
+       * Replace the selected text with the shortened text
+       */
+      editor.commands.insertContentAt(from, value)
+      to = from + value.length
+
+      return reader.read().then(processText)
+    })
+  }
 
   const onExtendClick = () => {}
 
