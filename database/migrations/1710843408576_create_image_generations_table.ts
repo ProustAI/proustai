@@ -10,8 +10,20 @@ export default class extends BaseSchema {
       table.string('image_location').nullable()
       table.string('prompt').notNullable()
 
-      table.string('character_id').nullable().unsigned().references('id').inTable('characters')
-      table.string('location_id').nullable().unsigned().references('id').inTable('locations')
+      table
+        .string('character_id')
+        .nullable()
+        .unsigned()
+        .references('id')
+        .inTable('characters')
+        .onDelete('CASCADE')
+      table
+        .string('location_id')
+        .nullable()
+        .unsigned()
+        .references('id')
+        .inTable('locations')
+        .onDelete('CASCADE')
 
       table.timestamp('created_at')
       table.timestamp('updated_at')
