@@ -11,13 +11,7 @@ import {
 } from '~/components/dropdown_menu'
 import clsx from 'clsx'
 import remixiconUrl from 'remixicon/fonts/remixicon.symbol.svg'
-import {
-  IconArrowsMinimize,
-  IconChecks,
-  IconDots,
-  IconMinimize,
-  IconRefresh,
-} from '@tabler/icons-react'
+import { IconChecks, IconMinimize, IconRefresh } from '@tabler/icons-react'
 import useParams from '~/hooks/use_params'
 
 interface AiDropdownProps {
@@ -55,8 +49,8 @@ const AiDropdown: React.FunctionComponent<AiDropdownProps> = ({ editor }) => {
     })
   }
 
-  const onShortenClick = async () => {
-    const from = editor.state.selection.from
+  const onSimplifyClick = async () => {
+    let from = editor.state.selection.from
     let to = editor.state.selection.to
 
     const selectedText = editor.state.doc.textBetween(from, to, ' ')
@@ -65,7 +59,7 @@ const AiDropdown: React.FunctionComponent<AiDropdownProps> = ({ editor }) => {
       {
         method: 'POST',
         headers: { 'Accept': 'text/event-stream', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: `Shorten this text: ${selectedText}` }),
+        body: JSON.stringify({ content: `Rewrite this text by simplifying it: ${selectedText}` }),
       }
     )
     const reader = response.body!.pipeThrough(new TextDecoderStream()).getReader()
@@ -74,21 +68,38 @@ const AiDropdown: React.FunctionComponent<AiDropdownProps> = ({ editor }) => {
     reader.read().then(function processText({ value, done }): any {
       if (done) return
 
-      /**
-       * Replace the selected text with the shortened text
-       */
       editor.commands.insertContentAt(from, value)
-      to = from + value.length
+      from += value.length
 
       return reader.read().then(processText)
     })
   }
 
-  const onExtendClick = () => {}
+  const onRephraseClick = async () => {
+    let from = editor.state.selection.from
+    let to = editor.state.selection.to
 
-  const onRephraseClick = () => {}
+    const selectedText = editor.state.doc.textBetween(from, to, ' ')
+    const response = await fetch(
+      `/novels/${params.novelId}/chapters/${params.chapterId}/complete`,
+      {
+        method: 'POST',
+        headers: { 'Accept': 'text/event-stream', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: `Rewrite this text, and rephrase it: ${selectedText}` }),
+      }
+    )
+    const reader = response.body!.pipeThrough(new TextDecoderStream()).getReader()
+    editor.commands.deleteRange({ from, to })
 
-  const onSimplifyClick = () => {}
+    reader.read().then(function processText({ value, done }): any {
+      if (done) return
+
+      editor.commands.insertContentAt(from, value)
+      from += value.length
+
+      return reader.read().then(processText)
+    })
+  }
 
   return (
     <DropdownMenu>
@@ -113,14 +124,6 @@ const AiDropdown: React.FunctionComponent<AiDropdownProps> = ({ editor }) => {
           <DropdownMenuItem className="cursor-pointer font-semibold" onClick={onCompleteClick}>
             <IconChecks className="mr-2 h-4 w-4" />
             <span>Complete</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer font-semibold" onClick={onShortenClick}>
-            <IconArrowsMinimize className="mr-2 h-4 w-4" />
-            <span>Shorten</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer font-semibold" onClick={onExtendClick}>
-            <IconDots className="mr-2 h-4 w-4" />
-            <span>Extend</span>
           </DropdownMenuItem>
           <DropdownMenuItem className="cursor-pointer font-semibold" onClick={onRephraseClick}>
             <IconRefresh className="mr-2 h-4 w-4" />
