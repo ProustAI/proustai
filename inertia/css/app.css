@@ -45,7 +45,11 @@
 
   /* Buttons */
   .primary-btn {
-    @apply horizontal center space-x-2 text-sm leading-6 font-medium bg-black text-white px-4 py-2 rounded-lg shadow-lg hover:opacity-75 transition;
+    @apply horizontal center space-x-2 text-sm leading-6 font-medium bg-black text-white px-4 py-2 rounded-lg shadow-lg hover:opacity-75 transition disabled:opacity-75 disabled:cursor-not-allowed;
+  }
+
+  .secondary-btn {
+    @apply horizontal center space-x-2 text-sm leading-6 font-medium bg-amber-800/10 text-amber-800 px-4 py-2 rounded-lg hover:opacity-75 transition border border-amber-800/20;
   }
 
   .danger-btn {

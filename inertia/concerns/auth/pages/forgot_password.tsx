@@ -1,11 +1,9 @@
 import * as React from 'react'
 import AuthLayout from '../components/auth_layout'
-import ContinueWithGoogle from '../components/continue_with_google'
 import { Link, useForm } from '@inertiajs/react'
-import OrDivider from '../components/or_divider'
 import InputField from '~/components/input_field'
 import SubmitButton from '~/components/submit_button'
-import useError from '~/hooks/use_error'
+import Alert, { AlertDescription, AlertTitle } from '~/components/alert'
 
 interface ForgotPasswordProps {}
 
@@ -24,26 +22,42 @@ const ForgotPassword: React.FunctionComponent<ForgotPasswordProps> = () => {
         <Link href="/" className="flex items-center justify-center">
           <img className="h-24 w-auto hover:opacity-75 transition" src="/logo.webp" alt="Logo" />
         </Link>
-        <h1 className="text-3xl font-semibold font-serif pt-4 text-center">Forgot Password.</h1>
-        <h2 className="text-zinc-800 text-center mt-2">
-          Type your email address and we will send you a link to reset your password.
-        </h2>
+        {!form.wasSuccessful && (
+          <>
+            <h1 className="text-3xl font-semibold font-serif pt-4 text-center">Forgot Password.</h1>
+            <h2 className="text-zinc-800 text-center mt-2">
+              Type your email address and we will send you a link to reset your password.
+            </h2>
+          </>
+        )}
       </div>
-      <div className="vertical w-full">
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <InputField
-            id="email"
-            type="email"
-            label="Email Address"
-            placeholder="marcel@proust.fr"
-            value={form.data.email}
-            onChange={(e) => form.setData('email', e.target.value)}
-          />
-          <SubmitButton className="!w-full" loading={form.processing}>
-            Send Reset Link
-          </SubmitButton>
-        </form>
-      </div>
+
+      {form.wasSuccessful && (
+        <Alert variant="success">
+          <AlertTitle className="font-semibold">Password Reset Link Sent</AlertTitle>
+          <AlertDescription>
+            We have sent a password reset link to your email address. Please check your inbox.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {!form.wasSuccessful && (
+        <div className="vertical w-full">
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            <InputField
+              id="email"
+              type="email"
+              label="Email Address"
+              placeholder="marcel@proust.fr"
+              value={form.data.email}
+              onChange={(e) => form.setData('email', e.target.value)}
+            />
+            <SubmitButton className="!w-full" loading={form.processing}>
+              Send Reset Link
+            </SubmitButton>
+          </form>
+        </div>
+      )}
     </AuthLayout>
   )
 }

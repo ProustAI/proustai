@@ -45,8 +45,8 @@ router.get('/auth/google/callback', [GoogleAuthController, 'callback'])
 router.get('/auth/forgot_password', [ForgotPasswordController, 'show'])
 router.post('/auth/forgot_password', [ForgotPasswordController, 'handle'])
 
-router.get('/auth/reset_password', [ResetPasswordController, 'show'])
-router.post('/auth/reset_password', [ResetPasswordController, 'handle'])
+router.get('/auth/reset_password/:email', [ResetPasswordController, 'show'])
+router.post('/auth/reset_password/:email', [ResetPasswordController, 'handle'])
 
 router.post('/auth/sign_out', [SignOutController, 'handle'])
 
@@ -130,4 +130,8 @@ router.get('/billing', [BillingController, 'show']).as('billing.show').use(middl
 router
   .get('/billing/manage', [BillingController, 'manage'])
   .as('billing.manage')
+  .use(middleware.auth())
+router
+  .get('/billing/upgrade', [BillingController, 'upgrade'])
+  .as('billing.upgrade')
   .use(middleware.auth())

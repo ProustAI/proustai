@@ -1,4 +1,6 @@
 import ImageGeneration from '#models/image_generation'
+import BillingService from '#services/billing_service'
+import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 import emitter from '@adonisjs/core/services/emitter'
 
@@ -92,12 +94,20 @@ export default class CharactersController {
     return response.redirect().toRoute('novels.characters.index', { novelId: character.novelId })
   }
 
-  async generateImage({ auth, params, request, response }: HttpContext) {
+  @inject()
+  async generateImage(
+    { auth, params, request, response }: HttpContext,
+    billingService: BillingService
+  ) {
     const novel = await auth
       .user!.related('novels')
       .query()
       .where('id', params.novelId)
       .firstOrFail()
+
+    const currentBillingPeriod = await billingService.retrieveCurrentBillingPeriod(auth.user!)
+    currentBillingPeriod.incrementNumberOfImageGenerations()
+    await currentBillingPeriod.save()
 
     const character = await novel
       .related('characters')

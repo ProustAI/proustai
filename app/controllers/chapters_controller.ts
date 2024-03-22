@@ -2,6 +2,8 @@ import env from '#start/env'
 import type { HttpContext } from '@adonisjs/core/http'
 import { OpenAI } from 'openai'
 import Ollama from 'ollama'
+import { inject } from '@adonisjs/core'
+import BillingService from '#services/billing_service'
 
 export default class ChaptersController {
   async store({ auth, params, response }: HttpContext) {
@@ -71,7 +73,8 @@ export default class ChaptersController {
     return response.redirect(`/novels/${novel.id}`)
   }
 
-  async complete({ auth, params, request, response }: HttpContext) {
+  @inject()
+  async complete({ auth, params, request, response }: HttpContext, billingService: BillingService) {
     const novel = await auth
       .user!.related('novels')
       .query()
@@ -80,6 +83,10 @@ export default class ChaptersController {
       .preload('characters')
       .preload('locations')
       .firstOrFail()
+
+    const currentBillingPeriod = await billingService.retrieveCurrentBillingPeriod(auth.user!)
+    currentBillingPeriod.incrementNumberOfLLmGenerations()
+    await currentBillingPeriod.save()
 
     const messages = [
       {

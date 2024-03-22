@@ -16,6 +16,7 @@ export default class ForgotPasswordController {
       await mail.send(new ResetPasswordNotification(user))
       return response.redirect().back()
     } catch (error) {
+      console.log(error)
       return response.redirect().back()
     }
   }

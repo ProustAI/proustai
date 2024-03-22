@@ -12,7 +12,20 @@ export default defineConfig({
    */
   sharedData: {
     errors: (ctx) => ctx.session?.flashMessages.get('errors'),
-    user: (ctx) => ctx.auth.user,
+    user: async (ctx) => {
+      if (!ctx.auth.user) {
+        return null
+      }
+
+      if (!FeatureFlagsService.isFeatureEnabled('billing')) {
+        return { ...ctx.auth.user, activePaidSubscription: true }
+      }
+
+      return {
+        ...ctx.auth.user.serialize(),
+        activePaidSubscription: ctx.auth.user ? await ctx.auth.user.hasPaidPlan() : false,
+      }
+    },
     qs: (ctx) => ctx.request.qs(),
     features: () => {
       return FeatureFlagsService.getFeatureFlagsValues()

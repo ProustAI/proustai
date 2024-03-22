@@ -7,6 +7,8 @@ import type { HasMany } from '@adonisjs/lucid/types/relations'
 import BaseModel from './base_model.js'
 import emitter from '@adonisjs/core/services/emitter'
 import BillingPeriod from './billing_period.js'
+import env from '#start/env'
+import Stripe from 'stripe'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -28,6 +30,22 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @column()
   declare stripeCustomerId: string | null
+
+  /**
+   * Utils.
+   */
+  async hasPaidPlan() {
+    const stripe = new Stripe(env.get('STRIPE_SECRET_KEY')!, { apiVersion: '2023-10-16' })
+    const customer = (await stripe.customers.retrieve(this.stripeCustomerId!, {
+      expand: ['subscriptions'],
+    })) as any
+    if (!customer.subscriptions.data.length) {
+      return false
+    }
+    return customer.subscriptions.data.some(
+      (subscription: Stripe.Subscription) => subscription.status === 'active'
+    )
+  }
 
   /**
    * Relationships.

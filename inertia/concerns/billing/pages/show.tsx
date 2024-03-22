@@ -3,11 +3,15 @@ import MainLayout from '~/components/main_layout'
 import Spinner from '~/components/spinner'
 import ExplorerPricingCard from '~/concerns/marketing/components/pricing/explorer_pricing_card'
 import WriterPricingCard from '~/concerns/marketing/components/pricing/writer_pricing_card'
+import UpgradeDialog from '../components/upgrade_dialog'
+import useUser from '~/hooks/use_user'
 
 interface ShowProps {}
 
 const Show: React.FunctionComponent<ShowProps> = () => {
   const [loading, setLoading] = React.useState(false)
+  const [open, setOpen] = React.useState(false)
+  const user = useUser()
 
   return (
     <MainLayout
@@ -25,12 +29,22 @@ const Show: React.FunctionComponent<ShowProps> = () => {
         </div>
       }
     >
+      <UpgradeDialog open={open} setOpen={setOpen} />
+
       <div className="vertical sm:horizontal gap-8">
         <div>
           <ExplorerPricingCard />
         </div>
         <div>
-          <WriterPricingCard />
+          <WriterPricingCard>
+            <button
+              className="primary-btn mt-4"
+              onClick={() => setOpen(true)}
+              disabled={user.activePaidSubscription}
+            >
+              Upgrade
+            </button>
+          </WriterPricingCard>
         </div>
       </div>
     </MainLayout>

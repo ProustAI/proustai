@@ -1,6 +1,7 @@
 import * as React from 'react'
 import MarketingLayout from '../components/marketing_layout'
 import { Link } from '@inertiajs/react'
+import { IconBrandGithub } from '@tabler/icons-react'
 
 interface HomeProps {}
 
@@ -14,10 +15,14 @@ const Home: React.FunctionComponent<HomeProps> = () => {
             ProustAI is an <i>AI-powered</i> <b>writing assistant</b> that helps you write your next
             novel. Writing a novel used to be painful, but with ProustAI, it's never been easier.
           </h2>
-          <div className="horizontal">
+          <div className="horizontal space-x-4">
             <Link href="/auth/sign_up" className="primary-btn">
               <span>Start writing</span> <span>→</span>
             </Link>
+            <a href="https://github.com/alexisbouchez/proustai" className="secondary-btn">
+              <IconBrandGithub className="w-4 h-4" />
+              <span>Read The Code</span>
+            </a>
           </div>
         </div>
         <div className="justify-end w-full hidden sm:flex">

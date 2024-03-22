@@ -5,7 +5,7 @@ import { createInertiaApp } from '@inertiajs/react'
 const appName = import.meta.env.VITE_APP_NAME || 'ProustAI'
 
 createInertiaApp({
-  progress: { color: '#5468FF' },
+  progress: { color: '#a16207' },
 
   title: (title) => (title ? `${title} - ${appName}` : appName),
 

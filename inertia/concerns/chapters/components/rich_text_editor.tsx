@@ -9,13 +9,23 @@ import RichTextMenubar from '~/concerns/chapters/components/rich_text_menubar'
 import type Chapter from '#types/chapter'
 import { useDebounce } from 'use-debounce'
 import * as React from 'react'
+import useUser from '~/hooks/use_user'
+import UpgradeDialog from '~/concerns/billing/components/upgrade_dialog'
 
 export default function RichTextEditor() {
   const params = useParams()
   const { currentChapter } = usePageProps<{ currentChapter: Chapter }>()
+  const [open, setOpen] = React.useState(false)
+  const user = useUser()
+
   const completionExtension = Extension.create({
     addKeyboardShortcuts() {
       const tabCommand: KeyboardShortcutCommand = ({ editor }) => {
+        if (!user.activePaidSubscription) {
+          setOpen(true)
+          return false
+        }
+
         fetch(`/novels/${params.novelId}/chapters/${params.chapterId}/complete`, {
           method: 'POST',
           headers: {
@@ -70,6 +80,7 @@ export default function RichTextEditor() {
 
   return (
     <div className="editor">
+      <UpgradeDialog open={open} setOpen={setOpen} />
       {editor && <RichTextMenubar editor={editor} />}
       <EditorContent className="editor__content" editor={editor} />
     </div>

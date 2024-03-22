@@ -1,13 +1,9 @@
 import React from 'react'
 import PricingArgumentItem from './pricing_argument_item'
-import Spinner from '~/components/spinner'
-import { useForm } from '@inertiajs/react'
 
 interface WriterPricingCardProps extends React.PropsWithChildren {}
 
 const WriterPricingCard: React.FunctionComponent<WriterPricingCardProps> = ({ children }) => {
-  const managedForm = useForm()
-
   return (
     <div>
       <div className="flex  max-w-96 flex-col overflow-hidden rounded-3xl p-6 shadow-lg shadow-gray-900/5 border border-zinc-300/30 bg-white">
@@ -26,8 +22,8 @@ const WriterPricingCard: React.FunctionComponent<WriterPricingCardProps> = ({ ch
         <div className="order-last mt-6">
           <ul role="list" className="-my-2 divide-y text-sm divide-gray-200 text-gray-700">
             <PricingArgumentItem argument="Rich Text Editor (+AI-based completion)" />
-            <PricingArgumentItem argument="Characters Database (+AI-based generation and visualization)" />
-            <PricingArgumentItem argument="Locations Database (+AI-based generation and visualization)" />
+            <PricingArgumentItem argument="Characters Database (+AI-based visualization)" />
+            <PricingArgumentItem argument="Locations Database (+AI-based visualization)" />
           </ul>
         </div>
         {children}

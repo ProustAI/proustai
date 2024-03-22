@@ -8,6 +8,7 @@
     "start": "node bin/server.js",
     "build": "node ace build",
     "dev": "docker compose -f docker-compose.dev.yml up -d && npm run migrate && node ace serve --watch",
+    "stripe": "stripe listen --forward-to localhost:3000/stripe/webhooks",
     "migrate": "node ace migration:run",
     "fresh": "node ace migration:fresh",
     "test": "node ace test",
