@@ -17,12 +17,15 @@ export default defineConfig({
         return null
       }
 
+      const { email, fullName } = ctx.auth.user
+
       if (!FeatureFlagsService.isFeatureEnabled('billing')) {
-        return { ...ctx.auth.user, activePaidSubscription: true }
+        return { email, fullName, activePaidSubscription: true }
       }
 
       return {
-        ...ctx.auth.user.serialize(),
+        email,
+        fullName,
         activePaidSubscription: ctx.auth.user ? await ctx.auth.user.hasPaidPlan() : false,
       }
     },
