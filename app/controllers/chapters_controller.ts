@@ -4,6 +4,7 @@ import { OpenAI } from 'openai'
 import Ollama from 'ollama'
 import { inject } from '@adonisjs/core'
 import BillingService from '#services/billing_service'
+import FeatureFlagsService from '#services/feature_flags_service'
 
 export default class ChaptersController {
   async store({ auth, params, response }: HttpContext) {
@@ -84,9 +85,11 @@ export default class ChaptersController {
       .preload('locations')
       .firstOrFail()
 
-    const currentBillingPeriod = await billingService.retrieveCurrentBillingPeriod(auth.user!)
-    currentBillingPeriod.incrementNumberOfLLmGenerations()
-    await currentBillingPeriod.save()
+    if (FeatureFlagsService.isFeatureEnabled('billing')) {
+      const currentBillingPeriod = await billingService.retrieveCurrentBillingPeriod(auth.user!)
+      currentBillingPeriod.incrementNumberOfLLmGenerations()
+      await currentBillingPeriod.save()
+    }
 
     const messages = [
       {

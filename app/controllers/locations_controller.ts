@@ -1,5 +1,6 @@
 import ImageGeneration from '#models/image_generation'
 import BillingService from '#services/billing_service'
+import FeatureFlagsService from '#services/feature_flags_service'
 import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 import emitter from '@adonisjs/core/services/emitter'
@@ -98,9 +99,11 @@ export default class LocationsController {
       .where('id', params.novelId)
       .firstOrFail()
 
-    const currentBillingPeriod = await billingService.retrieveCurrentBillingPeriod(auth.user!)
-    currentBillingPeriod.incrementNumberOfLLmGenerations()
-    await currentBillingPeriod.save()
+    if (FeatureFlagsService.isFeatureEnabled('billing')) {
+      const currentBillingPeriod = await billingService.retrieveCurrentBillingPeriod(auth.user!)
+      currentBillingPeriod.incrementNumberOfLLmGenerations()
+      await currentBillingPeriod.save()
+    }
 
     const location = await novel
       .related('locations')
