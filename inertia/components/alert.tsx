@@ -36,7 +36,7 @@ export const AlertDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={clsx('text-sm [&_p]:leading-relaxed', className)} {...props} />
+  <div ref={ref} className={clsx('text-sm pt-1 [&_p]:leading-relaxed', className)} {...props} />
 ))
 
 export default Alert
