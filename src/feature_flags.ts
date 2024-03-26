@@ -18,3 +18,5 @@ FeatureFlagsService.defineFeatureFlag(
 )
 
 FeatureFlagsService.defineFeatureFlag('image_generation', () => !!env.get('REPLICATE_API_TOKEN'))
+
+FeatureFlagsService.defineFeatureFlag('sign_up', () => env.get('ALLOW_SIGN_UP'))

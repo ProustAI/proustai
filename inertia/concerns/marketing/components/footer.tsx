@@ -1,9 +1,12 @@
 import * as React from 'react'
 import { IconBrandDiscord, IconBrandGithub, IconBrandX } from '@tabler/icons-react'
+import isFeatureEnabled from '~/lib/is_feature_enabled'
 
 interface FooterProps {}
 
 const Footer: React.FunctionComponent<FooterProps> = () => {
+  const isBillingEnabled = isFeatureEnabled('billing')
+
   return (
     <footer className="bg-black pt-12 shadow-lg" aria-labelledby="footer-heading">
       <div className="mx-auto max-w-7xl px-6 pb-8 lg:px-8">
@@ -37,11 +40,16 @@ const Footer: React.FunctionComponent<FooterProps> = () => {
               <div className="mt-10 md:mt-0">
                 <h3 className="text-sm font-semibold leading-6 text-zinc-50">Support</h3>
                 <ul role="list" className="mt-6 space-y-4">
-                  <li>
-                    <a className="text-sm leading-6 text-zinc-50 hover:text-white" href="/pricing">
-                      Pricing
-                    </a>
-                  </li>
+                  {isBillingEnabled && (
+                    <li>
+                      <a
+                        className="text-sm leading-6 text-zinc-50 hover:text-white"
+                        href="/pricing"
+                      >
+                        Pricing
+                      </a>
+                    </li>
+                  )}
                 </ul>
               </div>
             </div>

@@ -2,10 +2,12 @@ import * as React from 'react'
 import MarketingLayout from '../components/marketing_layout'
 import { Link } from '@inertiajs/react'
 import { IconBrandGithub } from '@tabler/icons-react'
+import isFeatureEnabled from '~/lib/is_feature_enabled'
 
 interface HomeProps {}
 
 const Home: React.FunctionComponent<HomeProps> = () => {
+  const signUpEnabled = isFeatureEnabled('sign_up')
   return (
     <MarketingLayout>
       <div className="min-h-[calc(100vh-112px)] mx-auto max-w-7xl items-center justify-between p-6 lg:px-8 grid lg:grid-cols-2 gap-12">
@@ -16,9 +18,11 @@ const Home: React.FunctionComponent<HomeProps> = () => {
             novel. Writing a novel used to be painful, but with ProustAI, it's never been easier.
           </h2>
           <div className="horizontal space-x-4">
-            <Link href="/auth/sign_up" className="primary-btn">
-              <span>Start writing</span> <span>→</span>
-            </Link>
+            {signUpEnabled && (
+              <Link href="/auth/sign_up" className="primary-btn">
+                <span>Start writing</span> <span>→</span>
+              </Link>
+            )}
             <a href="https://github.com/alexisbouchez/proustai" className="secondary-btn">
               <IconBrandGithub className="w-4 h-4" />
               <span>Read The Code</span>

@@ -6,6 +6,7 @@ interface HeaderProps {}
 
 const Header: React.FunctionComponent<HeaderProps> = () => {
   const isBillingEnabled = isFeatureEnabled('billing')
+  const signUpEnabled = isFeatureEnabled('sign_up')
 
   return (
     <header>
@@ -51,9 +52,11 @@ const Header: React.FunctionComponent<HeaderProps> = () => {
               Pricing
             </Link>
           )}
-          <Link href="/auth/sign_up" className="primary-btn">
-            <span>Start writing</span> <span>→</span>
-          </Link>
+          {signUpEnabled && (
+            <Link href="/auth/sign_up" className="primary-btn">
+              <span>Start writing</span> <span>→</span>
+            </Link>
+          )}
         </div>
       </nav>
 
