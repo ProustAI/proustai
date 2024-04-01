@@ -75,6 +75,7 @@ export default await Env.create(new URL('../', import.meta.url), {
   OPENAI_API_KEY: Env.schema.string.optional(),
   OPENAI_MODEL: Env.schema.string.optional(),
   OLLAMA_MODEL: Env.schema.string.optional(),
+  MAX_NUMBER_OF_TEXT_COMPLETIONS: Env.schema.number.optional(),
 
   /*
   |----------------------------------------------------------
@@ -83,4 +84,5 @@ export default await Env.create(new URL('../', import.meta.url), {
   */
   REPLICATE_API_TOKEN: Env.schema.string.optional(),
   REPLICATE_MODEL_ID: Env.schema.string.optional(),
+  MAX_NUMBER_OF_IMAGE_GENERATIONS: Env.schema.number.optional(),
 })

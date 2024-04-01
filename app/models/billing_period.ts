@@ -3,6 +3,7 @@ import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
 import User from './user.js'
 import BaseModel from './base_model.js'
+import env from '#start/env'
 
 export default class BillingPeriod extends BaseModel {
   /**
@@ -17,14 +18,32 @@ export default class BillingPeriod extends BaseModel {
   /**
    * Utils.
    */
-  async incrementNumberOfImageGenerations() {
+  async incrementNumberOfImageGenerations(): Promise<boolean> {
+    if (
+      env.get('MAX_NUMBER_OF_IMAGE_GENERATIONS') !== undefined &&
+      env.get('MAX_NUMBER_OF_IMAGE_GENERATIONS')! <= this.numberOfImageGenerations
+    ) {
+      return false
+    }
+
     this.numberOfImageGenerations++
     await this.save()
+
+    return true
   }
 
-  async incrementNumberOfLLmGenerations() {
+  async incrementNumberOfLLmGenerations(): Promise<boolean> {
+    if (
+      env.get('MAX_NUMBER_OF_IMAGE_GENERATIONS') !== undefined &&
+      env.get('MAX_NUMBER_OF_IMAGE_GENERATIONS')! <= this.numberOfImageGenerations
+    ) {
+      return false
+    }
+
     this.numberOfLlmGenerations++
     await this.save()
+
+    return true
   }
 
   /**

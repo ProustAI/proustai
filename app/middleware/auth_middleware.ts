@@ -1,7 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
 import type { Authenticators } from '@adonisjs/auth/types'
-import FeatureFlagsService from '#services/feature_flags_service'
 
 /**
  * Auth middleware is used authenticate HTTP requests and deny

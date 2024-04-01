@@ -39,8 +39,8 @@ const Footer: React.FunctionComponent<FooterProps> = () => {
             <div className="md:grid md:grid-cols-2 md:gap-8">
               <div className="mt-10 md:mt-0">
                 <h3 className="text-sm font-semibold leading-6 text-zinc-50">Support</h3>
-                <ul role="list" className="mt-6 space-y-4">
-                  {isBillingEnabled && (
+                {isBillingEnabled && (
+                  <ul role="list" className="mt-6 space-y-4">
                     <li>
                       <a
                         className="text-sm leading-6 text-zinc-50 hover:text-white"
@@ -49,8 +49,8 @@ const Footer: React.FunctionComponent<FooterProps> = () => {
                         Pricing
                       </a>
                     </li>
-                  )}
-                </ul>
+                  </ul>
+                )}
               </div>
             </div>
           </div>

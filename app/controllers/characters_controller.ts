@@ -108,8 +108,10 @@ export default class CharactersController {
 
     if (FeatureFlagsService.isFeatureEnabled('billing')) {
       const currentBillingPeriod = await billingService.retrieveCurrentBillingPeriod(auth.user!)
-      currentBillingPeriod.incrementNumberOfImageGenerations()
-      await currentBillingPeriod.save()
+      const canGenerate = await currentBillingPeriod.incrementNumberOfImageGenerations()
+      if (!canGenerate) {
+        return response.redirect().back()
+      }
     }
 
     const character = await novel

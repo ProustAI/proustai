@@ -87,8 +87,12 @@ export default class ChaptersController {
 
     if (FeatureFlagsService.isFeatureEnabled('billing')) {
       const currentBillingPeriod = await billingService.retrieveCurrentBillingPeriod(auth.user!)
-      currentBillingPeriod.incrementNumberOfLLmGenerations()
-      await currentBillingPeriod.save()
+      const canGenerate = await currentBillingPeriod.incrementNumberOfLLmGenerations()
+      if (!canGenerate) {
+        return response.badRequest(
+          'You have reached the maximum number of generations for this billing period.'
+        )
+      }
     }
 
     const messages = [

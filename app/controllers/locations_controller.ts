@@ -101,8 +101,10 @@ export default class LocationsController {
 
     if (FeatureFlagsService.isFeatureEnabled('billing')) {
       const currentBillingPeriod = await billingService.retrieveCurrentBillingPeriod(auth.user!)
-      currentBillingPeriod.incrementNumberOfLLmGenerations()
-      await currentBillingPeriod.save()
+      const canGenerate = await currentBillingPeriod.incrementNumberOfLLmGenerations()
+      if (!canGenerate) {
+        return response.redirect().back()
+      }
     }
 
     const location = await novel
